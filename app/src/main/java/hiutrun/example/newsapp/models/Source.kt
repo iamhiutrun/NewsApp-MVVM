@@ -1,4 +1,4 @@
-package hiutrun.example.newsapp
+package hiutrun.example.newsapp.models
 
 data class Source(
     val id: Any,
