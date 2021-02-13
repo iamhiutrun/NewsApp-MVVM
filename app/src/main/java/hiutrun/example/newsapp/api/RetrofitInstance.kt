@@ -1,7 +1,6 @@
 package hiutrun.example.newsapp.api
 
-import com.google.gson.Gson
-import hiutrun.example.newsapp.Util.Constants.Companion.BASE_URL
+import hiutrun.example.newsapp.util.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

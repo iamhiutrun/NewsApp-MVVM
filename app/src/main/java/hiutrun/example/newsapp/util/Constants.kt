@@ -1,4 +1,4 @@
-package hiutrun.example.newsapp.Util
+package hiutrun.example.newsapp.util
 
 class Constants {
     companion object{

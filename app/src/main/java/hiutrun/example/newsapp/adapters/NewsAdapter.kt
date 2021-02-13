@@ -1,4 +1,4 @@
-package hiutrun.example.newsapp.adapters
+ package hiutrun.example.newsapp.adapters
 
 import android.view.LayoutInflater
 import android.view.OrientationEventListener
