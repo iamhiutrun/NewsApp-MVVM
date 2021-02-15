@@ -1,7 +1,7 @@
 package hiutrun.example.newsapp.api
 
 import hiutrun.example.newsapp.models.NewsResponse
-import hiutrun.example.newsapp.util.Constants.Companion.API_KEY
+import hiutrun.example.newsapp.utils.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

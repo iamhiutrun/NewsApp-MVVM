@@ -1,6 +1,6 @@
 package hiutrun.example.newsapp.api
 
-import hiutrun.example.newsapp.util.Constants.Companion.BASE_URL
+import hiutrun.example.newsapp.utils.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
