@@ -6,6 +6,6 @@ import hiutrun.example.newsapp.db.ArticleDatabase
 class NewsRepository(
         val db:ArticleDatabase
 ) {
-    suspend fun getBreakingNews(country:String,pageNumber:Int)=
+    suspend fun getBreakingNews(country:String,pageNumber:Int) =
             RetrofitInstance.api.getBreakingNews(country,pageNumber)
 }
