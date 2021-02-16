@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import hiutrun.example.newsapp.R
 import hiutrun.example.newsapp.adapters.NewsAdapter
 import hiutrun.example.newsapp.ui.NewsActivity
@@ -18,8 +21,8 @@ import kotlinx.android.synthetic.main.fragment_saved_news.*
 
 class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
-    lateinit var viewModel:NewsViewModel
-    lateinit var newsAdapter:NewsAdapter
+    lateinit var viewModel: NewsViewModel
+    lateinit var newsAdapter: NewsAdapter
     val TAG = SavedNewsFragment::class.simpleName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,46 +33,47 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
         newsAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("article",it)
+                putSerializable("article", it)
             }
             findNavController().navigate(
                     R.id.action_savedNewsFragment_to_articleFragment2,
                     bundle
             )
         }
-        viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    hideProgressBar()
-                    response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles)
 
-                    }
-                }
-                is Resource.Error -> {
-                    hideProgressBar()
-                    response.message?.let { message ->
-                        Log.e(TAG, "An error occured: $message")
-                    }
-                }
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ){
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return true
+            }
 
-                is Resource.Loading -> {
-                    showProgressBar()
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val article = newsAdapter.differ.currentList[position]
+                viewModel.deleteArticle(article)
+                Snackbar.make(view,"Article deleted successfully",Snackbar.LENGTH_SHORT).apply {
+                    setAction("Undo"){
+                        viewModel.saveArticle(article)
+                    }
+                    show()
                 }
             }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(rvSavedNews)
+        }
+
+        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles->
+            newsAdapter.differ.submitList(articles)
         })
-
-    }
-    private fun hideProgressBar(){
-        paginationProgressBar.visibility = View.INVISIBLE
     }
 
-    private fun showProgressBar(){
-        paginationProgressBar.visibility = View.VISIBLE
-    }
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
-        rvSavedNews.apply{
+        rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
