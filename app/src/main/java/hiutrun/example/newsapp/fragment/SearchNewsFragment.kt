@@ -57,7 +57,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         viewModel.searchNews(editable.toString())
                     }
                 }
-
             }
         }
         viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
@@ -71,7 +70,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         if(isLastPage){
                                 rvBreakingNews.setPadding(0,0,0,0)
                         }
-
                     }
                 }
                 is Resource.Error -> {
@@ -80,13 +78,11 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         Log.e(TAG, "An error occured: $message")
                     }
                 }
-
                 is Resource.Loading -> {
                     showProgressBar()
                 }
             }
         })
-
     }
 
 
