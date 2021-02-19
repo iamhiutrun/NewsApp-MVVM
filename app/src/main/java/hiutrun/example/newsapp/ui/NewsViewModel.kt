@@ -3,6 +3,7 @@ package hiutrun.example.newsapp.ui
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.ConnectivityManager.*
 import android.net.NetworkCapabilities.*
 import android.net.TransportInfo
 import android.os.Build
@@ -44,7 +45,7 @@ class NewsViewModel(
     }
 
     private suspend fun safeSearchNewsCall(searchQuery: String){
-        breakingNews.postValue(Resource.Loading())
+        searchNews.postValue(Resource.Loading())
         try {
             if(hasInternetConnection()){
                 val response = newsRepository.searchNews(searchQuery,searchNewsPage)
@@ -83,7 +84,7 @@ class NewsViewModel(
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             val activeNetwork = connectivityManager.activeNetwork?: return false
             val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)?: return false
-            when{
+            return when{
                 networkCapabilities.hasTransport(TRANSPORT_WIFI) -> true
                 networkCapabilities.hasTransport(TRANSPORT_CELLULAR) -> true
                 networkCapabilities.hasTransport(TRANSPORT_ETHERNET) -> true
@@ -92,9 +93,9 @@ class NewsViewModel(
         }else{
             connectivityManager.activeNetworkInfo?.run{
                 return when(type){
-                    TRANSPORT_WIFI -> true
-                    TRANSPORT_CELLULAR -> true
-                    TRANSPORT_ETHERNET -> true
+                    TYPE_WIFI -> true
+                    TYPE_MOBILE -> true
+                    TYPE_ETHERNET -> true
                     else -> false
                 }
             }
